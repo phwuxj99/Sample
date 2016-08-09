@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Northwind.Entities.Models;
+using Northwind.Entities.StoredProcedures.Models;
 
 namespace Northwind.Service
 {
@@ -25,6 +26,11 @@ namespace Northwind.Service
         public IEnumerable<CustomerOrderDetail> CustomerOrderDetail(string customerID)
         {
             return _storedProcedures.CustomerOrderDetail(customerID);
+        }
+
+        public IEnumerable<WebsiteUserIDP> GetWebsiteUserIDP(string userID)
+        {
+            return _storedProcedures.GetWebsiteUserIDP(userID);
         }
     }
 }

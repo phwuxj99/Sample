@@ -2,6 +2,7 @@ using System;
 using System.Web.Http;
 using System.Web.Mvc;
 using Northwind.Web.Areas.HelpPage.ModelDescriptions;
+using Northwind.Web.Areas.HelpPage.Models;
 
 namespace Northwind.Web.Areas.HelpPage.Controllers
 {
@@ -12,42 +13,51 @@ namespace Northwind.Web.Areas.HelpPage.Controllers
     {
         private const string ErrorViewName = "Error";
 
-        public HttpConfiguration Configuration { get; private set; }
-
         public HelpController()
+            : this(GlobalConfiguration.Configuration)
         {
-            Configuration = GlobalConfiguration.Configuration;
         }
+
+        public HelpController(HttpConfiguration config)
+        {
+            Configuration = config;
+        }
+
+        public HttpConfiguration Configuration { get; private set; }
 
         public ActionResult Index()
         {
             ViewBag.DocumentationProvider = Configuration.Services.GetDocumentationProvider();
-            return PartialView(Configuration.Services.GetApiExplorer().ApiDescriptions);
+            return View(Configuration.Services.GetApiExplorer().ApiDescriptions);
         }
 
         public ActionResult Api(string apiId)
         {
-            if (string.IsNullOrEmpty(apiId))
+            if (!String.IsNullOrEmpty(apiId))
             {
-                return PartialView(ErrorViewName);
+                HelpPageApiModel apiModel = Configuration.GetHelpPageApiModel(apiId);
+                if (apiModel != null)
+                {
+                    return View(apiModel);
+                }
             }
 
-            var apiModel = Configuration.GetHelpPageApiModel(apiId);
-
-            return apiModel != null ? PartialView(apiModel) : PartialView(ErrorViewName);
+            return View(ErrorViewName);
         }
 
         public ActionResult ResourceModel(string modelName)
         {
-            if (String.IsNullOrEmpty(modelName))
+            if (!String.IsNullOrEmpty(modelName))
             {
-                return PartialView(ErrorViewName);
+                ModelDescriptionGenerator modelDescriptionGenerator = Configuration.GetModelDescriptionGenerator();
+                ModelDescription modelDescription;
+                if (modelDescriptionGenerator.GeneratedModels.TryGetValue(modelName, out modelDescription))
+                {
+                    return View(modelDescription);
+                }
             }
 
-            var modelDescriptionGenerator = Configuration.GetModelDescriptionGenerator();
-
-            ModelDescription modelDescription;
-            return modelDescriptionGenerator.GeneratedModels.TryGetValue(modelName, out modelDescription) ? PartialView(modelDescription) : PartialView(ErrorViewName);
+            return View(ErrorViewName);
         }
     }
 }

@@ -43,10 +43,14 @@ namespace Northwind.Web
             container
                 .RegisterType<IDataContextAsync, NorthwindContext>(new PerRequestLifetimeManager())
                 .RegisterType<IUnitOfWorkAsync, UnitOfWork>(new PerRequestLifetimeManager())
+                .RegisterType<IRepositoryAsync<UserControl>, Repository<UserControl>>()
+                .RegisterType<IRepositoryAsync<tblWebsiteUser>, Repository<tblWebsiteUser>>()
                 .RegisterType<IRepositoryAsync<Customer>, Repository<Customer>>()
                 .RegisterType<IRepositoryAsync<Product>, Repository<Product>>()
                 .RegisterType<IProductService, ProductService>()
                 .RegisterType<ICustomerService, CustomerService>()
+                .RegisterType<IWebsiteUserService, WebsiteUserService>()
+                .RegisterType<IUserControlService, UserControlService>()
                 .RegisterType<INorthwindStoredProcedures, NorthwindContext>(new PerRequestLifetimeManager())
                 .RegisterType<IStoredProcedureService, StoredProcedureService>();
         }

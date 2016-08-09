@@ -2,6 +2,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using Northwind.Entities.Models.Mapping;
 using Repository.Pattern.Ef6;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace Northwind.Entities.Models
 {
@@ -15,8 +16,10 @@ namespace Northwind.Entities.Models
         public NorthwindContext()
             : base("Name=NorthwindContext")
         {
-        }        
+        }
 
+        public DbSet<UserControl> UserControl { get; set; }
+        public DbSet<tblWebsiteUser> tblWebsiteUser { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CustomerDemographic> CustomerDemographics { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -50,6 +53,8 @@ namespace Northwind.Entities.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
             modelBuilder.Configurations.Add(new CategoryMap());
             modelBuilder.Configurations.Add(new CustomerDemographicMap());
             modelBuilder.Configurations.Add(new CustomerMap());
