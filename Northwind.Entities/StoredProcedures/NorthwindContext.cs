@@ -87,8 +87,32 @@ namespace Northwind.Entities.Models
 
         public int AddWebsiteUser(WebsiteUser newUser)
         {
-            
-            return 0;
+            var sqlBigIDParameter =newUser.SqlBigID !=null  ?
+                new SqlParameter("@SQLBigID", newUser.SqlBigID) :
+                new SqlParameter("@SQLBigID", typeof(int));
+
+            var orgNameParameter =newUser.OrgName!=null ?
+                new SqlParameter("@OrgName", newUser.OrgName) :
+                new SqlParameter("@OrgName", typeof(string));
+
+            var userNameParameter =newUser.UserName!=null ?
+                new SqlParameter("@UserName", newUser.UserName) :
+                new SqlParameter("@UserName", typeof(string));
+
+            var userIDParameter = newUser.UserID!=null ?
+                new SqlParameter("@UserID", newUser.UserID) :
+                new SqlParameter("@UserID", typeof(string));
+
+            var userPasswordParameter = newUser.UserID != null ?
+                new SqlParameter("@UserPassword", newUser.UserID) :
+                new SqlParameter("@UserPassword", typeof(string));
+
+            var emailParameter = newUser.UserID != null ?
+                new SqlParameter("@Email", newUser.UserID) :
+                new SqlParameter("@Email", typeof(string));
+
+            return Database.ExecuteSqlCommand("LV_NutritionCourseUserAdd @SQLBigID ,@OrgName ,@UserName ,@UserID ,@UserPassword ,@Email ", sqlBigIDParameter, orgNameParameter, userNameParameter, userIDParameter, userPasswordParameter, emailParameter);
+
             //http://www.c-sharpcorner.com/article/crud-using-mvc-web-api-and-angularjs/
             //http://cybarlab.com/crud-operations-in-angularjs-and-web-api
             //http://www.codeproject.com/Tips/1074608/CRUD-in-ASP-NET-MVC-using-WebAPI-with-AngularJS
